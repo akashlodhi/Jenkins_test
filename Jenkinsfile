@@ -19,6 +19,7 @@ pipeline {
             steps {
                 script {
                     gv.buildApp()
+                    echo 'build is completed'
                 }
             }
         }
