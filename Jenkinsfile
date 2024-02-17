@@ -1,3 +1,5 @@
+def gv
+
 pipeline {
     agent any
     parameters {
@@ -6,26 +8,39 @@ pipeline {
     }
 
     stages {
-        stage('build') {
+        stage('init') {
             steps {
-                echo 'building the application'
+                script {
+                    gv = load 'script.groovy'
+                }
             }
         }
-        stage('test') {
-            when {
+        stage('build') {
+            steps {
+                script {
+                    gv.buildApp()
+                }
+            }
+        }
+            stage('test') {
+                when {
                     expression {
                         params.executeTests
                     }
-            }
-            steps {
-                echo 'testing the application'
-            }
-        }
-            stage('deploy') {
+                }
                 steps {
-                    echo 'Deploying the application'
-                    echo "deploy with ${params.VERSION}"
+                    script {
+                        gv.testApp()
+                    }
                 }
             }
+            stage('deploy') {
+                steps {
+                    script {
+                        gv.deployApp()
+                    }
+                }
+            }
+        }
     }
-}
+
