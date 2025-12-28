@@ -8,7 +8,7 @@ variable "instance_type" {
     default = "t2.medium"
 }
 
-variable "key_Pair"{
+variable "key_name"{
     description = "key_Pair"
     default = "stark_jenkins"
 }
