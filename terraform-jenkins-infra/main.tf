@@ -90,7 +90,7 @@ data "aws_ssm_parameter" "ubuntu_2404" {
   name = "/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id"
 }
 
-resource "aws_instance" "jenkins_ec2" {
+resource "aws_instance" "jenkins_pipeline" {
   ami           = data.aws_ssm_parameter.ubuntu_2404.value
   instance_type = var.instance_type
   subnet_id     = var.subnet_id
