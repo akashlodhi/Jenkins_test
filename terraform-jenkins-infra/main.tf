@@ -86,17 +86,22 @@ resource "aws_iam_instance_profile" "jenkins_profile" {
 ########################################
 # Jenkins EC2 Instance
 ########################################
-resource "aws_instance" "jenkins_pipeline" {
-  ami           = "ami-0f5ee92e2d63afc18"   # Amazon Linux 2 (ap-south-1)
+data "aws_ssm_parameter" "ubuntu_2404" {
+  name = "/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id"
+}
+
+resource "aws_instance" "jenkins_ec2" {
+  ami           = data.aws_ssm_parameter.ubuntu_2404.value
   instance_type = var.instance_type
-  key_name      = var.key_name
+  subnet_id     = var.subnet_id
 
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
-  iam_instance_profile  = aws_iam_instance_profile.jenkins_profile.name
+  iam_instance_profile   = aws_iam_instance_profile.jenkins_profile.name
 
-  user_data = file("jenkins-install.sh")
+  user_data = file("jenkins_install.sh")
 
   tags = {
     Name = "jenkins-server"
   }
 }
+
