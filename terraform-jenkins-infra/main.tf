@@ -105,4 +105,13 @@ resource "aws_instance" "jenkins_pipeline" {
   }
 }
 
+# Elastic IP for Jenkins (ensures a stable public IP)
+resource "aws_eip" "jenkins_eip" {
+  instance = aws_instance.jenkins_pipeline.id
+  vpc      = true
+  tags = {
+    Name = "jenkins-eip"
+  }
+}
+
 
