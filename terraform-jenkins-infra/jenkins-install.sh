@@ -1,17 +1,23 @@
 #!/bin/bash
-yum update -y
+set -e
+
+# Update system
+apt-get update -y
 
 # Install Java
-amazon-linux-extras install java-openjdk11 -y
+apt-get install -y openjdk-17-jdk
 
-# Add Jenkins repo
-wget -O /etc/yum.repos.d/jenkins.repo \
-https://pkg.jenkins.io/redhat-stable/jenkins.repo
+# Add Jenkins key and repo
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
 
-rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
 
 # Install Jenkins
-yum install jenkins -y
+apt-get update -y
+apt-get install -y jenkins
 
 # Start Jenkins
 systemctl start jenkins
