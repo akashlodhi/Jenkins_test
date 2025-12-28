@@ -93,6 +93,7 @@ data "aws_ssm_parameter" "ubuntu_2404" {
 resource "aws_instance" "jenkins_pipeline" {
   ami                         = data.aws_ssm_parameter.ubuntu_2404.value
   instance_type               = var.instance_type
+  key_name                    = var.key_name
   associate_public_ip_address = true  # ensures public IP even in default VPC
 
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
