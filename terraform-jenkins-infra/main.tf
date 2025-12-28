@@ -91,17 +91,18 @@ data "aws_ssm_parameter" "ubuntu_2404" {
 }
 
 resource "aws_instance" "jenkins_pipeline" {
-  ami           = data.aws_ssm_parameter.ubuntu_2404.value
-  instance_type = var.instance_type
-  subnet_id     = var.subnet_id
+  ami                         = data.aws_ssm_parameter.ubuntu_2404.value
+  instance_type               = var.instance_type
+  associate_public_ip_address = true  # ensures public IP even in default VPC
 
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.jenkins_profile.name
 
-  user_data = file("jenkins_install.sh")
+  user_data = file("jenkins-install.sh")
 
   tags = {
     Name = "jenkins-server"
   }
 }
+
 
